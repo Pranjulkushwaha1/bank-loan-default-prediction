@@ -70,3 +70,4 @@ def predict(data: LoanApplication):
         "probability": round(float(probability), 4),
         "risk_category": risk
     }
+    print("API Result Message")
