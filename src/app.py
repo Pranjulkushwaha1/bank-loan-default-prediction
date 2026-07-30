@@ -2,12 +2,22 @@ from fastapi import FastAPI
 import joblib
 import numpy as np
 from pydantic import BaseModel
-import os
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+from slowapi import Limiter, _rate_limit_exceeded_handler
+from slowapi.util import get_remote_address
+from slowapi.errors import RateLimitExceeded
+from starlette.requests import Request
 
 model = joblib.load('models/best_model.pkl')
 scaler = joblib.load('models/scaler.pkl')
+
+
 app = FastAPI()
+
+# Rate limiting setup — max 5 requests per minute per IP
+limiter = Limiter(key_func=get_remote_address)
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 class LoanApplication(BaseModel):
     RevolvingUtilizationOfUnsecuredLines: float
@@ -22,8 +32,9 @@ class LoanApplication(BaseModel):
     NumberOfDependents: int
 
     
-@app.post("/predict")
-def predict(data: LoanApplication):
+@app.post("/v1/predict")
+@limiter.limit("5/minute")
+def predict(request: Request, data: LoanApplication):
     
     # Feature Engineering
     monthly_debt = data.MonthlyIncome * data.DebtRatio
@@ -69,3 +80,6 @@ def predict(data: LoanApplication):
         "probability": round(float(probability), 4),
         "risk_category": risk
     }
+@app.get("/v1/health")
+def health_check():
+    return {"status": "healthy"}

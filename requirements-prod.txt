@@ -9,3 +9,4 @@ shap==0.51.0
 pydantic==2.13.4
 python-dotenv==1.2.2
 psycopg2-binary==2.9.12
+slowapi==0.1.9
