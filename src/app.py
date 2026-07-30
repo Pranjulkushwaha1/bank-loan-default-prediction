@@ -5,9 +5,8 @@ from pydantic import BaseModel
 import os
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-model = joblib.load(r'C:\Users\HP\Desktop\bank-loan-default-prediction\models\best_model.pkl')
-scaler = joblib.load(r'C:\Users\HP\Desktop\bank-loan-default-prediction\models\scaler.pkl')
-
+model = joblib.load('models/best_model.pkl')
+scaler = joblib.load('models/scaler.pkl')
 app = FastAPI()
 
 class LoanApplication(BaseModel):
@@ -70,4 +69,3 @@ def predict(data: LoanApplication):
         "probability": round(float(probability), 4),
         "risk_category": risk
     }
-    print("API Result Message")
