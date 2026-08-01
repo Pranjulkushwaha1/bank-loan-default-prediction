@@ -6,3 +6,4 @@ data/
 mlartifacts/
 mlruns/
 notebooks/mlruns/
+mlflow.db
