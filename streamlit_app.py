@@ -1,9 +1,26 @@
 import streamlit as st
 import joblib
 import numpy as np
+import os
+from huggingface_hub import hf_hub_download
 
-model = joblib.load('models/best_model.pkl')
-scaler = joblib.load('models/scaler.pkl')
+@st.cache_resource
+def load_models():
+    model_path = hf_hub_download(
+        repo_id="PranjulKushwaha/bank-loan-default-prediction",
+        filename="best_model.pkl",
+        repo_type="model"
+    )
+    scaler_path = hf_hub_download(
+        repo_id="PranjulKushwaha/bank-loan-default-prediction",
+        filename="scaler.pkl",
+        repo_type="model"
+    )
+    model = joblib.load(model_path)
+    scaler = joblib.load(scaler_path)
+    return model, scaler
+
+model, scaler = load_models()
 
 st.title("🏦 Bank Loan Default Prediction")
 st.markdown("### Customer Risk Assessment System")
