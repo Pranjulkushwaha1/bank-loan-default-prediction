@@ -1,0 +1,11 @@
+venv/
+data/
+notebooks/
+mlruns/
+mlartifacts/
+.env
+requirements-dev.txt
+__pycache__/
+*.pyc
+.git/
+mlflow.db
