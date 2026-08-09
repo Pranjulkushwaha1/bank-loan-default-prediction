@@ -73,7 +73,7 @@ class LoanApplication(BaseModel):
     
 @app.post("/v1/predict")
 @limiter.limit("5/minute")
-def predict(request: Request, data: LoanApplication):
+async def predict(request: Request, data: LoanApplication):
     
     # Feature Engineering
     monthly_debt = data.MonthlyIncome * data.DebtRatio
@@ -123,5 +123,5 @@ def predict(request: Request, data: LoanApplication):
         "risk_category": risk
     }
 @app.get("/v1/health")
-def health_check():
+async def health_check():
     return {"status": "healthy"}
