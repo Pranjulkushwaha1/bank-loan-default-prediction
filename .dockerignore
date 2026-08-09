@@ -7,3 +7,5 @@ mlartifacts/
 requirements-dev.txt
 __pycache__/
 *.pyc
+logs/
+predictions.db

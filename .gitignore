@@ -7,3 +7,5 @@ mlartifacts/
 mlruns/
 notebooks/mlruns/
 mlflow.db
+logs/
+predictions.db
