@@ -8,3 +8,6 @@ pydantic==2.13.4
 python-dotenv==1.2.2
 slowapi==0.1.9
 loguru
+python-jose[cryptography]
+passlib[bcrypt]
+python-multipart
