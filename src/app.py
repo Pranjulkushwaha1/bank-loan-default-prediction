@@ -1,7 +1,10 @@
-from fastapi import FastAPI
+from fastapi import FastAPI,Depends,HTTPException,status
+from fastapi.security import OAuth2PasswordRequestForm
 import joblib
 import numpy as np
 from pydantic import BaseModel
+
+from src.auth import verify_password,create_access_token,get_current_user,require_role,fake_user_db
 
 from datetime import datetime
 
@@ -70,10 +73,20 @@ class LoanApplication(BaseModel):
     NumberOfTime60_89DaysPastDueNotWorse: int
     NumberOfDependents: int
 
-    
+@app.post("/auth/token")
+async def login(form_data: OAuth2PasswordRequestForm = Depends()):
+    user = fake_user_db.get(form_data.username)
+    if not user or not verify_password(form_data.password, user["hashed_password"]):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect username or password"
+        )
+    token = create_access_token(data={"sub": user["username"], "role": user["role"]})
+    return {"access_token": token, "token_type": "bearer"}
+
 @app.post("/v1/predict")
 @limiter.limit("5/minute")
-async def predict(request: Request, data: LoanApplication):
+async def predict(request: Request, data: LoanApplication, current_user:dict=Depends(require_role("user"))):
     
     # Feature Engineering
     monthly_debt = data.MonthlyIncome * data.DebtRatio
