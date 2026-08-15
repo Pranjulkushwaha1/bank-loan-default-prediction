@@ -28,5 +28,9 @@ jobs:
 
       - name: Run Tests
         run: python -m pytest
+        env:
+          SECRET_KEY: ${{ secrets.SECRET_KEY }}
+          ALGORITHM: HS256
+          ACCESS_TOKEN_EXPIRE_MINUTES: 30
 
       
