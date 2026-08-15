@@ -24,16 +24,7 @@ jobs:
           pip install pytest httpx
 
       - name: Create dummy models
-        run: |
-          python -c "
-           import joblib, numpy as np, os
-          from sklearn.linear_model import LogisticRegression
-          from sklearn.preprocessing import StandardScaler
-          os.makedirs('models', exist_ok=True)
-          X = np.random.rand(10, 14)
-          y = [0,1]*5
-          joblib.dump(LogisticRegression().fit(X, y), 'models/best_model.pkl')
-          joblib.dump(StandardScaler().fit(X), 'models/scaler.pkl')"
+        run: python -c "import joblib,numpy as np,os; from sklearn.linear_model import LogisticRegression; from sklearn.preprocessing import StandardScaler; os.makedirs('models',exist_ok=True); X=np.random.rand(10,14); y=[0,1]*5; joblib.dump(LogisticRegression().fit(X,y),'models/best_model.pkl'); joblib.dump(StandardScaler().fit(X),'models/scaler.pkl')"
 
       - name: Run Tests
         run: python -m pytest
