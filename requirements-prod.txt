@@ -12,3 +12,6 @@ python-jose[cryptography]
 passlib[bcrypt]
 python-multipart
 bcrypt==3.2.2
+langchain
+chromadb
+sentence-transformers
