@@ -1,0 +1,22 @@
+Bank Loan Default Prediction Policy
+
+1. Age Policy:
+Applicants must be between 21 and 65 years of age.
+Senior citizens above 60 may get special consideration.
+
+2. Income Policy:
+Minimum monthly income required is 15000 rupees.
+Higher income reduces default risk significantly.
+
+3. Debt Ratio Policy:
+Debt ratio above 0.5 is considered high risk.
+Ideal debt ratio should be below 0.3 for loan approval.
+
+4. Risk Categories:
+Low Risk (0-30%): Loan approved with standard rates.
+Medium Risk (30-60%): Loan approved with higher interest.
+High Risk (60%+): Loan rejected or requires guarantor.
+
+5. Late Payment History:
+More than 2 late payments in 90 days means high default risk.
+Zero late payments indicates responsible borrower.

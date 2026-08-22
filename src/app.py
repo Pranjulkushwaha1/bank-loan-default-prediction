@@ -15,6 +15,10 @@ from starlette.requests import Request
 
 from loguru import logger
 import sqlite3
+
+from src.rag import ask_rag
+
+#-------------------------------------------------------------------------------------------------------
 logger.add(
     "logs/predictions.log",
     rotation="1 MB",
@@ -73,6 +77,9 @@ class LoanApplication(BaseModel):
     NumberOfTime60_89DaysPastDueNotWorse: int
     NumberOfDependents: int
 
+class Question(BaseModel):
+    Question: str
+#-----------------------------------------------------------------------------------------
 @app.post("/auth/token")
 async def login(form_data: OAuth2PasswordRequestForm = Depends()):
     user = fake_user_db.get(form_data.username)
@@ -135,6 +142,12 @@ async def predict(request: Request, data: LoanApplication, current_user:dict=Dep
         "probability": round(float(probability), 4),
         "risk_category": risk
     }
+#----------------------------------------------------------------------------------------
+@app.post("/v1/ask")
+async def ask(data: Question, current_user: dict = Depends(get_current_user)):
+    answer = ask_rag(data.question)
+    return {"answer": answer}
+
 @app.get("/v1/health")
 async def health_check():
     return {"status": "healthy"}

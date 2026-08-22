@@ -28,5 +28,10 @@ class SentenceTransformerEmbeddings(Embeddings):
 embeddings = SentenceTransformerEmbeddings()
 vectorstore = Chroma.from_documents(chunks, embeddings)
 retriever = vectorstore.as_retriever(search_kwargs={"k": 3})
-    
-ask_rag()
+
+def ask_rag(question: str) -> str:
+    docs = retriever.get_relevant_documents(question)
+    context = "\n".join([doc.page_content for doc in docs])
+    return f"Context:\n{context}\n\nSawal: {question}"
+
+
