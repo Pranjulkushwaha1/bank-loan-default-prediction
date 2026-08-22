@@ -1,3 +1,4 @@
+import requests
 import streamlit as st
 import joblib
 import numpy as np
@@ -61,3 +62,31 @@ if st.button("🔍 Predict Risk"):
         st.warning(f"⚠️ MEDIUM RISK — Probability: {probability:.2%}")
     else:
         st.error(f"🚨 HIGH RISK — Probability: {probability:.2%}")
+#------------------------------------------------------------------------------
+
+st.divider()
+st.subheader("🤖 Loan Policy Chatbot")
+
+username = st.text_input("Username")
+password = st.text_input("Password", type="password")
+
+if st.button("Login"):
+    response = requests.post(
+        "http://localhost:8000/auth/token",
+        data={"username":username, "password":password}
+    )
+    if response.status_code == 200:
+        st.session_state["token"] = response.json()["access_token"]
+        st.success("✅ Login successful!")
+    else:
+        st.error("❌ Wrong username or password")
+
+if "token" in st.session_state:
+    question = st.text_input("Apna sawaal likho")
+    if st.button("Ask"):
+        response = requests.post(
+            "http://localhost:8000/v1/ask",
+            json={"question":question},
+            headers={"Authorization": f"Bearer {st.session_state['token']}"}
+        )
+        st.write(response.json()["answer"])
